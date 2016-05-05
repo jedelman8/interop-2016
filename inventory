@@ -1,0 +1,9 @@
+
+[routers:vars]
+un=ntc
+pwd=ntc123
+
+[routers]
+csr1
+csr2
+csr3

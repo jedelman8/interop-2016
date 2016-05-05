@@ -1,0 +1,46 @@
+---
+
+  - name: PLAY 1 - INTEROP DEMO
+    hosts: csr1
+    connection: local
+    gather_facts: no
+
+
+    tasks:
+
+      - name: PERFORM SAVE OPERATION
+        ntc_save_config:
+          platform=cisco_ios_ssh
+          host={{ inventory_hostname }}
+          username={{ un }}
+          password={{ pwd }}
+          local_file=backups/{{ inventory_hostname }}.cfg
+
+
+      - name: COPY FILE TO DEVICES
+        ntc_file_copy:
+          platform=cisco_ios_ssh
+          host={{ inventory_hostname }}
+          username={{ un }}
+          password={{ pwd }}
+          local_file=files/interop.bin
+        tags: copy
+
+      - name: SHOW
+        ntc_show_command:
+          host={{ inventory_hostname }}
+          username={{ un }}
+          password={{ pwd }}
+          platform=cisco_ios_ssh
+          command='show ip int brief'
+          template_dir='/home/cisco/projects/legacy/ntc-templates/templates'
+        tags: getter
+        register: interfaces
+
+      - name: SHOW
+        debug: var=interfaces
+        tags: getter
+
+
+      - template: src=templates/interop.j2 dest=files/report.md
+        tags: getter

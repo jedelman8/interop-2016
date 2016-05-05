@@ -1,0 +1,7 @@
+
+DEVICE: {{ inventory_hostname }}
+{% for interface in interfaces.response %}
+INTERFACE: {{ interface.intf }}
+IP ADDRESS: {{ interface.ipaddr }}
+
+{% endfor %}
